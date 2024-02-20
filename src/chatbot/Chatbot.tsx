@@ -7,7 +7,7 @@ function Chatbot() {
     const [input, setInput] = useState("");
 
     interface OutputObject {
-        message: string; // replace 'any' with the actual type of 'message'
+        message: string; 
         target: string;
       }
 

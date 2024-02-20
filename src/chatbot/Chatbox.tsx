@@ -1,5 +1,5 @@
-import { Chat } from 'openai/resources';
-import React, {useState} from 'react';
+
+import React from 'react';
 
 interface ChatboxProps {
     target: string;
@@ -9,8 +9,8 @@ interface ChatboxProps {
 
 function Chatbox({target, message}: ChatboxProps){
     return (
-        <div>
-            <p className='px-4 py-2 rounded-lg mb-2'>{target}: {message}</p>
+        <div className='my-4'>
+            <p className='bg-blue-100 text-blue-800 p-4 rounded-lg shadow'>{target}: {message}</p>
         </div>
     )
 }
