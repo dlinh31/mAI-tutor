@@ -7,8 +7,8 @@ let prompts = [
 async function get_help(prompt) {
     console.log("into typescript")
     const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-        
+        // apiKey: process.env.OPENAI_API_KEY,
+        apiKey: "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",
         dangerouslyAllowBrowser: true
     })
 
