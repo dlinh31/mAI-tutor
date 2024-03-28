@@ -3,7 +3,7 @@
         {
             "type": "function",
             "function": {
-                "name": "generate_history_quiz",
+                "name": "generate_quiz",
                 "description": "generate ONE multiple choice question on the topic that user chooses, containing 4 answers, with only one correct answer. The first answer returned should be the correct answer. Total, it will return an array of 5 elements. The first element is the question, the second element is the correct answer. The following three elements are three wrong answers",
                 "parameters": {
                     "type": "object",

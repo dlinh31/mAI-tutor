@@ -1,8 +1,10 @@
 const OpenAI = require('openai');
 const fs = require('fs');
-require('dotenv').config({path: '../.env'});
-const api_key = process.env.OPENAI_API_KEY
+const path = require('path');
+const dotenvPath = path.resolve(__dirname, '../../.env');
 
+require('dotenv').config({path: dotenvPath});
+const api_key = process.env.OPENAI_API_KEY
 const openai = new OpenAI({
     apiKey: api_key,
     dangerouslyAllowBrowser: true
@@ -32,20 +34,23 @@ const general_chatbot = async (req, res) => {
 
 const quiz_generate = async (req, res) => {
     const { user_question } = req.body;
-
-    const preprompt_json = fs.readFileSync("./preprompt.json");
+    let filePath = path.join(__dirname, '/preprompt.json');
+    const preprompt_json = fs.readFileSync(filePath, 'utf8');
     const preprompt = JSON.parse(preprompt_json);  
-    const quiz_tool_json = fs.readFileSync('./generate_quiz_tool.json')
+
+    filePath = path.join(__dirname, '/generate_quiz_tool.json');
+    const quiz_tool_json = fs.readFileSync(filePath, 'utf8')
     const quiz_tool = JSON.parse(quiz_tool_json).tools;
 
     const messages = {"role": "user", "content": `Help me generate one question only about the topic of ${user_question}. The first option must be the correct option. The follow three options must tbe wrong options `};
     preprompt.push(messages)
-    
+
+
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: preprompt,
         tools: quiz_tool,
-        tool_choice: {"type": "function", "function": {"name": "generate_history_quiz"}},
+        tool_choice: {"type": "function", "function": {"name": "generate_quiz"}},
     });
 
     const data = response.choices[0].message.tool_calls[0].function.arguments;
@@ -59,6 +64,7 @@ const quiz_generate = async (req, res) => {
     }
 
 }
+
 
 
 module.exports = {general_chatbot, quiz_generate};

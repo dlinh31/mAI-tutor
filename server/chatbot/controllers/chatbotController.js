@@ -24,6 +24,19 @@ const addChatSession = async (req, res) => {
     }
 }
 
+
+const getMessage = async (req,res) => {
+    try {
+        const user = await userModel.findById(req.params.userId);
+        console.log(user)
+        const chatSession = await chatSessionModel.findOne({user: user});
+        res.status(200).send(chatSession.messages);
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 const addMessage = async (req, res) => {
     try {
         const user = await userModel.findOne({username: req.params.username});
@@ -41,8 +54,23 @@ const addMessage = async (req, res) => {
     }
 }
 
+const deleteMessages = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await userModel.findById(userId);
+        const chatSession = await chatSessionModel.findOne({ user: user });
+        chatSession.messages = [];
+        await chatSession.save();
+        res.status(200).send('Messages deleted successfully');
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 module.exports = {
     addUser,
     addChatSession,
-    addMessage
+    getMessage,
+    addMessage,
+    deleteMessages
 }

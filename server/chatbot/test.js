@@ -1,6 +1,6 @@
 const OpenAI = require('openai');
 const fs = require('fs');
-require('dotenv').config();
+require('dotenv').config({path: '/.env'});
 const api_key = process.env.REACT_APP_API_KEY
 
 
@@ -9,8 +9,6 @@ const preprompt = JSON.parse(preprompt_json);
 
 const quiz_tool_json = fs.readFileSync('./generate_quiz_tool.json')
 const quiz_tool = JSON.parse(quiz_tool_json).tools;
-
-
 
 // Print the JavaScript object
 const openai = new OpenAI({
