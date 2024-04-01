@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const {general_chatbot, quiz_generate} = require('./controllers/gptController');
+const {
+  general_chatbot, 
+  quiz_generate } = require('./controllers/gptController');
 const {
   addUser,
   addChatSession,
@@ -31,7 +33,7 @@ mongoose.connect('mongodb://localhost:27017/chatbot')
 
 app.post('/chatbot', general_chatbot);
 
-app.get('/quiz', quiz_generate);
+app.post('/quiz', quiz_generate);
 
 app.post('/register', addUser);
 

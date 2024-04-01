@@ -1,28 +1,76 @@
 import React, {useState} from 'react';
 
+interface FetchedQuestion {
+    topic: string[];
+}
+
+const fetchQuestion = async (topic: string) => {
+    try {
+        const response = await fetch(`http://localhost:3000/quiz/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_question: topic})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Data fetched successfully');
+            return data;
+        } else {
+            throw new Error(`Failed to fetch data. Status: ${response.status} Status Text: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
 function QuizGenerator(){
     const [input, setInput] = useState("");
+    const [questions, setQuestions] = useState<QuizObject[]>([]);
 
-    interface OutputObject {
-        message: string; 
-        target: string;
-      }
+    interface QuizObject {
+        question: string; 
+        answers: string[];
+        correctAnswer: string;
+    }
 
     
-      const [output, setOutput] = useState<OutputObject[]>([]);
-      
+    const getQuestion = async () => {
+        console.log("before await")
+        const fetchedQuestion = await fetchQuestion(input) as unknown as FetchedQuestion;
+        console.log("fetched questions: ",fetchedQuestion);
+        if (fetchedQuestion) {
+            const question = {
+                question: fetchedQuestion.topic[0][0],
+                answers: [fetchedQuestion.topic[0][1], fetchedQuestion.topic[0][2], fetchedQuestion.topic[0][3], fetchedQuestion.topic[0][4]],
+                correctAnswer: fetchedQuestion.topic[0][1],
+            }
+            setQuestions([question]);
+
+            console.log("print state: ", question)
+
+        }
+    }
+    
 
 
     return (
-        <div>
-            <h1>This is QuizGenerator</h1>
+        <div className="my-4 ml-2">
+            <h1 className="text-2xl font-bold mb-4">This is QuizGenerator</h1>
+            <input 
+                type="text" 
+                value={input} 
+                onChange={(e) => setInput(e.target.value)} 
+                className="border border-gray-300 rounded-md px-4 py-2 mb-4"
+            />
             <button 
-            className="my-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold ml-2 py-2 px-4 rounded"
+                onClick={getQuestion}
+            >
                 Send
             </button>
-
-            
         </div>
     )
 

@@ -28,7 +28,6 @@ const addChatSession = async (req, res) => {
 const getMessage = async (req,res) => {
     try {
         const user = await userModel.findById(req.params.userId);
-        console.log(user)
         const chatSession = await chatSessionModel.findOne({user: user});
         res.status(200).send(chatSession.messages);
     }

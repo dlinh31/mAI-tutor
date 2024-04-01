@@ -34,37 +34,32 @@ function Chatbot() {
 
   interface OutputObject {
     message: string;
-    target: string;
+    sender: string;
   }
 
   const [output, setOutput] = useState<OutputObject[]>([]);
   useEffect(() => {
-
-    async function fetchChatHistory () {
+    const fetchChatHistory = async () => {
       try {
         const response = await fetch('http://localhost:3000/chat/65e515cb0f6d9261edfa8c06', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
-        })
+        });
         
-      const data = await response.json();
-      const formattedData = data.map((item: any) => ({
-        message: item.text,
-        target: item.sender
-      }));
-      setOutput((prevOutput) => [...prevOutput, ...formattedData]);
-      
-
-    } catch (error) {
-      console.error('Error:', error);
-    }
-    }
+        const data = await response.json();
+        const formattedData = data.map((item: any) => ({
+          message: item.text,
+          sender: item.sender
+        }));
+        setOutput((prevOutput) => [...prevOutput, ...formattedData]);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
     fetchChatHistory();
-    
-  }
-  , []);
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -72,9 +67,10 @@ function Chatbot() {
 
   const handleClick = async () => {
     console.log('button clicked');
-    setOutput((prevOutput) => [{ message: input, target: 'user' },...prevOutput]);
+    setOutput((prevOutput) => [{ message: input, sender: 'user' },...prevOutput]);
     saveChat('user2', 'user', input);
     setInput("");
+    const chat_history = output;
 
     // Call HTTP POST
     try {
@@ -83,11 +79,11 @@ function Chatbot() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_message: input })
+        body: JSON.stringify({ user_message: input, chat_history: chat_history })
       });
       const data = await response.json();
 
-      setOutput((prevOutput) => [ { message: data.chatbot_message, target: 'ai' }, ...prevOutput,]);
+      setOutput((prevOutput) => [ { message: data.chatbot_message, sender: 'ai' }, ...prevOutput,]);
 
       // Save GPT message to DB
       saveChat('user2', 'ai', data.chatbot_message);
@@ -112,7 +108,7 @@ function Chatbot() {
         Send
       </button>
       {output.map((item, index) => (
-        <Chatbox key={index} target={item.target} message={item.message} />
+        <Chatbox key={index} sender={item.sender} message={item.message} />
       ))}
     </div>
   );

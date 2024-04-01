@@ -11,11 +11,18 @@ const openai = new OpenAI({
 })
 
 const general_chatbot = async (req, res) => {
-    const { user_message } = req.body;
-    let chatbot_prompts = [
-        { role: "system", content: "You are a study assistant, please provide support for users to learn"},
-    ]
-    chatbot_prompts.push({role: "user", content: user_message})
+    const { user_message, chat_history } = req.body;
+    let chatbot_prompts = chat_history.map((chat) => {
+        return {
+            role: chat.target === 'ai' ? 'assistant' : 'user',
+            content: chat.message,
+        };
+    });
+    
+    chatbot_prompts.push({ role: "system", content: "You are a study assistant, please provide support for users to learn"});
+    chatbot_prompts.push({ role: "user", content: user_message});
+    console.log(chatbot_prompts)
+    
 
     const completion = await openai.chat.completions.create({
         messages: chatbot_prompts,
