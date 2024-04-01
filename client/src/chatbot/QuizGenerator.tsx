@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
-
+import McqBtn from './McqBtn';
 interface FetchedQuestion {
     topic: string[];
+}
+
+interface QuizObject {
+    question: string; 
+    answers: string[];
+    correctAnswer: string;
 }
 
 const fetchQuestion = async (topic: string) => {
@@ -26,21 +32,15 @@ const fetchQuestion = async (topic: string) => {
     }
 };
 
+
 function QuizGenerator(){
     const [input, setInput] = useState("");
     const [questions, setQuestions] = useState<QuizObject[]>([]);
 
-    interface QuizObject {
-        question: string; 
-        answers: string[];
-        correctAnswer: string;
-    }
-
-    
     const getQuestion = async () => {
-        console.log("before await")
+        console.log("before await");
         const fetchedQuestion = await fetchQuestion(input) as unknown as FetchedQuestion;
-        console.log("fetched questions: ",fetchedQuestion);
+
         if (fetchedQuestion) {
             const question = {
                 question: fetchedQuestion.topic[0][0],
@@ -50,9 +50,10 @@ function QuizGenerator(){
             setQuestions([question]);
 
             console.log("print state: ", question)
-
         }
     }
+
+
     
 
 
@@ -71,6 +72,25 @@ function QuizGenerator(){
             >
                 Send
             </button>
+            
+
+            {questions.length > 0 && (
+                
+
+                <div className="flex flex-col">
+                    <div className="bg-blue-100 my-3 mx-8 p-4 rounded-md mb-4 text-center">
+                        {questions[0].question}
+                    </div>
+
+                    {questions[0].answers.map((question, index) => (
+                        <McqBtn 
+                            key={index}
+                            answer={question}
+                            isTrue={index === 0} 
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     )
 
