@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const chatSessionSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     createdAt: { type: Date, default: Date.now },
     messages: [
         {
@@ -13,4 +13,4 @@ const chatSessionSchema = new mongoose.Schema({
 });
 
 const ChatSession = mongoose.model('ChatSession', chatSessionSchema);
-module.exports = ChatSession;
+exports.ChatSession = ChatSession;

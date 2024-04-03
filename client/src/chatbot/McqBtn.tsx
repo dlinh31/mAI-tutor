@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 interface McqBtnProps {
     answer: string;
@@ -10,6 +10,12 @@ interface McqBtnProps {
 
 
 const McqBtn: React.FC<McqBtnProps> = ({ answer, isTrue }) => {
+    const [answerDisplay, setAnswerDisplay] = useState("");
+    useEffect(() => {
+        // Code to be executed when the 'answer' prop changes
+        setAnswerDisplay(answer);
+        setColor("blue")
+    }, [answer]);
 
     function handleClick(isTrue: boolean) {
         if (isTrue){
@@ -30,7 +36,7 @@ const McqBtn: React.FC<McqBtnProps> = ({ answer, isTrue }) => {
         ${color === "red" ? 'bg-red-500 hover:bg-red-600' : ''} `}
             onClick={() => handleClick(isTrue)}
         >
-            {answer}
+            {answerDisplay}
         </button>
     );
 };

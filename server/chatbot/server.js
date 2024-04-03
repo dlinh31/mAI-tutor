@@ -9,6 +9,8 @@ const {
   addMessage, 
   deleteMessages } = require('./controllers/chatbotController');
 
+  const auth = require("./middleware/auth");
+
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -25,6 +27,8 @@ app.use((req, res, next) => {
       next();
     }
   });
+  app.use(express.json());
+
   
 
 mongoose.connect('mongodb://localhost:27017/chatbot')
@@ -37,13 +41,13 @@ app.post('/quiz', quiz_generate);
 
 app.post('/register', addUser);
 
-app.post('/chat', addChatSession);
+app.post('/newchat/:userId', addChatSession);
 
 app.get('/chat/:userId', getMessage);
 
 app.delete('/chat/:userId', deleteMessages);
 
-app.patch('/chat/:username', addMessage);
+app.patch('/chat/:userId', auth, addMessage);
 
 
 app.listen(3000, () => {

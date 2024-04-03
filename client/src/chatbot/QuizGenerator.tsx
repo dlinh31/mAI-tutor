@@ -37,8 +37,7 @@ function QuizGenerator(){
     const [input, setInput] = useState("");
     const [questions, setQuestions] = useState<QuizObject[]>([]);
 
-    const getQuestion = async () => {
-        console.log("before await");
+    const handleSubmit = async () => {
         const fetchedQuestion = await fetchQuestion(input) as unknown as FetchedQuestion;
 
         if (fetchedQuestion) {
@@ -49,7 +48,6 @@ function QuizGenerator(){
             }
             setQuestions([question]);
 
-            console.log("print state: ", question)
         }
     }
 
@@ -68,7 +66,7 @@ function QuizGenerator(){
             />
             <button 
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold ml-2 py-2 px-4 rounded"
-                onClick={getQuestion}
+                onClick={handleSubmit}
             >
                 Send
             </button>
