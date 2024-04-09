@@ -4,12 +4,17 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Chatbot from "./chatbot/Chatbot";
+import Login from "./Login";
 import LandingPage from "./LandingPage";
 import QuizGenerator from "./chatbot/QuizGenerator";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage />
+  },
+  {
+    path: "/login",
+    element: <Login />
   },
   {
     path: "/chatbot",
