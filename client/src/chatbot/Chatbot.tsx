@@ -38,13 +38,19 @@ function Chatbot() {
   }
 
   const [output, setOutput] = useState<OutputObject[]>([]);
+  const token = localStorage.getItem('jwt');
+  console.log(token);
+
+
   useEffect(() => {
+
     const fetchChatHistory = async () => {
       try {
         const response = await fetch('http://localhost:3000/chat/65e515cb0f6d9261edfa8c06', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Auth-Token': `${token}`,
           }
         });
         

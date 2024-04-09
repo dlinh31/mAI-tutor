@@ -4,6 +4,7 @@ const {
   quiz_generate } = require('./controllers/gptController');
 const {
   addUser,
+  loginUser,
   addChatSession,
   getMessage, 
   addMessage, 
@@ -29,7 +30,6 @@ app.use((req, res, next) => {
   });
   app.use(express.json());
 
-  
 
 mongoose.connect('mongodb://localhost:27017/chatbot')
 .then( () => console.log('Connected to MongoDB') )
@@ -41,11 +41,13 @@ app.post('/quiz', quiz_generate);
 
 app.post('/register', addUser);
 
-app.post('/newchat/:userId', addChatSession);
+app.post('/login', loginUser);
 
-app.get('/chat/:userId', getMessage);
+app.post('/newchat/:userId', auth, addChatSession);
 
-app.delete('/chat/:userId', deleteMessages);
+app.get('/chat/:userId', auth, getMessage);
+
+app.delete('/chat/:userId', auth, deleteMessages);
 
 app.patch('/chat/:userId', auth, addMessage);
 

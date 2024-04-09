@@ -4,7 +4,6 @@ const { ChatSession } = require('../models/chatSessionModel.js')
 
 
 const addUser = async (req, res) => {
-    // Destructure user input from request body
     const { email, password, name } = req.body;
 
     try {
@@ -19,7 +18,7 @@ const addUser = async (req, res) => {
 
         await user.save();
         const token = user.generateAuthToken();
-        res.header('x-auth-token', token).send({ user: user._id, email: user.email, password: user.password, name: user.name});        
+        res.header('X-Auth-Token', token).send({ user: user._id, email: user.email, password: user.password, name: user.name, token: token});        
     } catch (error) {
         // Log and return the error if the operation fails
         console.error(error);
@@ -27,9 +26,34 @@ const addUser = async (req, res) => {
     }
 };
 
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if user exists
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(400).send("Invalid email or password.");
+        }
+
+        // Check if password is correct
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(400).send("Invalid email or password.");
+        }
+
+        // Generate and send token
+        const token = user.generateAuthToken();
+        res.header('X-Auth-Token', token).send({ user: user._id, email: user.email, name: user.name, token: token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred while logging in the user.");
+    }
+};
+
+
 const addChatSession = async (req, res) => {
     try {
-        console.log("into addchat")
         const user = await User.findById(req.params.userId);
         console.log("User: ", user)
         console.log(user)
@@ -83,6 +107,7 @@ const deleteMessages = async (req, res) => {
 
 module.exports = {
     addUser,
+    loginUser,
     addChatSession,
     getMessage,
     addMessage,
