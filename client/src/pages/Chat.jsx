@@ -114,51 +114,50 @@ function ChatPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/4 bg-gray-800 text-white">
-        <div className="p-4 font-bold">Rooms</div>
-        <CreateChatRoom socket={socket.current}/>
-        {chatRooms.length === 0 ? (
-          <div className="p-4">No chat rooms available.</div>
-        ) : (
-          <ul>
-            {chatRooms.map((chatRoom) => (
-              <li key={chatRoom._id} onClick={() => handleChatSelection(chatRoom)}
-                  className={`p-4 cursor-pointer ${currentChat.id === chatRoom._id ? 'bg-gray-700' : ''}`}>
-                {chatRoom.name}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="flex-1 flex flex-col">
-        <header className="bg-blue-500 text-white p-4">{currentChat.name}</header>
-        {currentChat.id && (
-          <div className="flex-grow overflow-auto p-4 space-y-4">
-            {messages.map((msg, index) => (
-              <div key={index}>
-                <div>{msg.senderName || msg.senderId.name}</div>
-                <div className="bg-gray-100 text-gray-800 rounded p-2">{msg.content}</div>
-                <div ref={messagesEndRef} /> {/* This empty div will be used to scroll to */}
-              </div>
-            ))}
-          </div>
-        )}
-        {currentChat.id && (
-          <form className="flex p-4" onSubmit={sendMessage}>
-            <input
-              type="text"
-              placeholder="Type a message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="flex-grow p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button type="submit" className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send</button>
-          </form>
-        )}
-      </div>
+  <div className="chat-container">
+    <div className="chat-sidebar">
+      <div className="sidebar-header">Rooms</div>
+      <CreateChatRoom socket={socket.current} />
+      {chatRooms.length === 0 ? (
+        <div className="sidebar-no-rooms">No chat rooms available.</div>
+      ) : (
+        <ul className="chat-room-list">
+          {chatRooms.map((chatRoom) => (
+            <li key={chatRoom._id} onClick={() => handleChatSelection(chatRoom)}
+                className={`chat-room-item ${currentChat.id === chatRoom._id ? 'active-room' : ''}`}>
+              {chatRoom.name}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  );
+    <div className="chat-main">
+      <header className="chat-header">{currentChat.name}</header>
+      <div className="message-area">
+        {messages.map((msg, index) => (
+          <div key={index} className="message">
+            <div className="sender-name">{msg.senderName || msg.senderId.name}</div>
+            <div className="message-content">{msg.content}</div>
+            <div ref={messagesEndRef} /> {/* This empty div will be used to scroll to */}
+          </div>
+        ))}
+      </div>
+      {currentChat.id && (
+        <form className="message-form" onSubmit={sendMessage}>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="message-input"
+          />
+          <button type="submit" className="send-button">Send</button>
+        </form>
+      )}
+    </div>
+  </div>
+);
+
 }
 
 export default ChatPage

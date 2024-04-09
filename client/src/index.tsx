@@ -23,8 +23,8 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/chatbot/quiz" element={<QuizGenerator />} />
+          <Route path="/aitutor" element={<Chatbot />} />
+          <Route path="/aitutor/quiz" element={<QuizGenerator />} />
         </Routes>
       </BrowserRouter>
     </UserContextProvider>

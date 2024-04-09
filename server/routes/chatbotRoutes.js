@@ -5,6 +5,7 @@ const { general_chatbot, quiz_generate } = require('../controllers/gptController
 const { getMessage, addMessage, deleteMessages } = require('../controllers/chatbotController');
 
 
+
 // Chatbot and quiz routes
 router.post('/chatbot', general_chatbot);
 router.post('/quiz', quiz_generate);
