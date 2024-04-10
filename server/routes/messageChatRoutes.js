@@ -13,7 +13,7 @@ const {
 
 const userAuth = require('../middleware/userAuth');
 
-router.use(userAuth);
+// router.use(userAuth);
 
 // Message routes
 router.post('/messages', createMessage);

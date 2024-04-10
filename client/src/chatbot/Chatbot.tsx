@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Chatbox from './Chatbox';
 
-function saveChat(username: string, sender: string, message: string) {
+function saveChat(userId: string, sender: string, message: string) {
   const data = {
+    userId: userId,
     message: [
       {
         text: message,
         sender: sender,
       }]};
 
-  fetch(`http://localhost:3000/chat/${username}`, {
+  fetch(`http://localhost:3000/api/chat`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -36,21 +37,25 @@ function Chatbot() {
     message: string;
     sender: string;
   }
+  interface UserObject {
+    name: string;
+    email: string;
+    token: string;
+    id: string;
+  }
 
   const [output, setOutput] = useState<OutputObject[]>([]);
   const token = localStorage.getItem('jwt');
-  console.log(token);
-
-
+  const user: UserObject | null = JSON.parse(localStorage.getItem("user") || "");
   useEffect(() => {
 
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch('http://localhost:3000/chat/65e515cb0f6d9261edfa8c06', {
+        const response = await fetch(`http://localhost:3000/api/chat/${user!.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': `${token}`,
+            'X-Auth-Token': `${token}`, // TODO: fix this auth
           }
         });
         
@@ -59,7 +64,7 @@ function Chatbot() {
           message: item.text,
           sender: item.sender
         }));
-        setOutput((prevOutput) => [...prevOutput, ...formattedData]);
+        setOutput(formattedData.reverse());
       } catch (error) {
         console.error('Error:', error);
       }
@@ -74,13 +79,13 @@ function Chatbot() {
   const handleClick = async () => {
     console.log('button clicked');
     setOutput((prevOutput) => [{ message: input, sender: 'user' },...prevOutput]);
-    saveChat('user2', 'user', input);
+    saveChat(user!.id, 'user', input);
     setInput("");
     const chat_history = output;
 
     // Call HTTP POST
     try {
-      const response = await fetch('http://localhost:3000/chatbot', {
+      const response = await fetch('http://localhost:3000/api/chat/aichat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -92,7 +97,7 @@ function Chatbot() {
       setOutput((prevOutput) => [ { message: data.chatbot_message, sender: 'ai' }, ...prevOutput,]);
 
       // Save GPT message to DB
-      saveChat('user2', 'ai', data.chatbot_message);
+      saveChat(user!.id, 'ai', data.chatbot_message);
     } catch (error) {
       console.error('Error:', error);
     }

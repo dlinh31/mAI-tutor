@@ -1,12 +1,13 @@
-const bcrypt = require('bcrypt');
-const { User } = require('../models/userModel.js');
+const User = require('../models/userModel.js');
 const { ChatSession } = require('../models/chatSessionModel.js')
 
 const addChatSession = async(req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        console.log("Into addchatsession controller");
+        userId = req.body.userId
+        console.log(userId);
+        user = await User.findById(req.body.userId);
         console.log("User: ", user)
-        console.log(user)
         const chatSession = await ChatSession.create({ user: user, messages: [] });
         console.log("Created chat session");
         res.status(200).send(chatSession);
@@ -27,7 +28,7 @@ const getMessage = async(req, res) => {
 
 const addMessage = async(req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        const user = await User.findById(req.body.userId);
         console.log(user)
         const chatSession = await ChatSession.findOne({ user: user });
         const newMessage = {
@@ -44,7 +45,7 @@ const addMessage = async(req, res) => {
 
 const deleteMessages = async(req, res) => {
     try {
-        const userId = req.params.userId;
+        const userId = req.body.userId;
         const user = await User.findById(userId);
         const chatSession = await ChatSession.findOne({ user: user });
         chatSession.messages = [];
