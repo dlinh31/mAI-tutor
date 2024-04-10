@@ -12,7 +12,7 @@ interface QuizObject {
 
 const fetchQuestion = async (topic: string) => {
     try {
-        const response = await fetch(`http://localhost:3000/quiz/`, {
+        const response = await fetch(`http://localhost:3000/api/chat/quiz`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

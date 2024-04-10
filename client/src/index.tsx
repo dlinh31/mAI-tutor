@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import Chatbot from './chatbot/Chatbot';
 import LandingPage from './LandingPage';
 import QuizGenerator from './chatbot/QuizGenerator';
@@ -10,8 +10,19 @@ import Navbar from './components/Navbar';
 import Signup from './pages/Signup';
 import ChatPage from './pages/Chat';
 import { UserContextProvider } from './context/userContext';
+import { useUser } from './context/userContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+const RequireAuth = () => {
+  const { user } = useUser();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
+};
 
 root.render(
   <React.StrictMode>
@@ -22,9 +33,11 @@ root.render(
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/aitutor" element={<Chatbot />} />
-          <Route path="/aitutor/quiz" element={<QuizGenerator />} />
+          <Route element={<RequireAuth />}> {/* Wrap protected routes */}
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/aitutor" element={<Chatbot />} />
+            <Route path="/aitutor/quiz" element={<QuizGenerator />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </UserContextProvider>

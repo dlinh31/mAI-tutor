@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Chatbox from './Chatbox';
 
+
 function saveChat(userId: string, sender: string, message: string) {
   const data = {
     userId: userId,
@@ -55,7 +56,6 @@ function Chatbot() {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': `${token}`, // TODO: fix this auth
           }
         });
         
@@ -88,7 +88,7 @@ function Chatbot() {
       const response = await fetch('http://localhost:3000/api/chat/aichat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ user_message: input, chat_history: chat_history })
       });
