@@ -4,6 +4,7 @@ import CreateChatRoom from '../components/CreateChatRoom';
 import { useUser } from '../context/userContext';
 import socketIOClient from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
+import ChatboxUser from '../components/ChatboxUser';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -135,13 +136,17 @@ function ChatPage() {
       <header className="chat-header">{currentChat.name}</header>
       <div className="message-area">
         {messages.map((msg, index) => (
-          <div key={index} className="message">
-            <div className="sender-name">{msg.senderName || msg.senderId.name}</div>
-            <div className="message-content">{msg.content}</div>
-            <div ref={messagesEndRef} /> {/* This empty div will be used to scroll to */}
-          </div>
+          <ChatboxUser 
+            key={index} 
+            sender={msg.senderId._id === user.id ? 'user' : 'other'}
+            senderName={msg.senderName || msg.senderId.name} 
+            content={msg.content}
+          />
         ))}
+        {/* This empty div will be used to scroll to the latest message */}
+        <div ref={messagesEndRef} />
       </div>
+      
       {currentChat.id && (
         <form className="message-form" onSubmit={sendMessage}>
           <input
