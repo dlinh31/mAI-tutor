@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Chatbox from './Chatbox';
+import React, { useEffect, useState, useRef } from 'react';
+import Chatbox from '../components/Chatbox';
 
 
 function saveChat(userId: string, sender: string, message: string) {
@@ -46,8 +46,9 @@ function Chatbot() {
   }
 
   const [output, setOutput] = useState<OutputObject[]>([]);
-  const token = localStorage.getItem('jwt');
   const user: UserObject | null = JSON.parse(localStorage.getItem("user") || "");
+  const endOfMessagesRef = useRef(null); // Ref to help scroll to the bottom
+
   useEffect(() => {
 
     const fetchChatHistory = async () => {
@@ -64,7 +65,7 @@ function Chatbot() {
           message: item.text,
           sender: item.sender
         }));
-        setOutput(formattedData.reverse());
+        setOutput(formattedData);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -72,13 +73,21 @@ function Chatbot() {
     fetchChatHistory();
   }, []);
 
+
+  useEffect(() => {
+    // Automatically scroll to the bottom whenever the output changes
+    if (endOfMessagesRef.current) {
+      (endOfMessagesRef.current as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [output]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
 
   const handleClick = async () => {
-    console.log('button clicked');
-    setOutput((prevOutput) => [{ message: input, sender: 'user' },...prevOutput]);
+
+    setOutput((prevOutput) => [...prevOutput, { message: input, sender: 'user' }]);
     saveChat(user!.id, 'user', input);
     setInput("");
     const chat_history = output;
@@ -94,35 +103,51 @@ function Chatbot() {
       });
       const data = await response.json();
 
-      setOutput((prevOutput) => [ { message: data.chatbot_message, sender: 'ai' }, ...prevOutput,]);
+      // setOutput((prevOutput) => [...prevOutput, { message: data.chatbot_message, sender: 'ai' }]);
+      
+      // // Save GPT message to DB
+      // saveChat(user!.id, 'ai', data.chatbot_message);
 
-      // Save GPT message to DB
+
+      const chatbotResponse = { message: data.chatbot_message, sender: 'ai' };
+      setOutput((prevOutput) => [...prevOutput, chatbotResponse]);
       saveChat(user!.id, 'ai', data.chatbot_message);
+
+
+
+
+
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   return (
-    <div className='m-6'>
-      <input
-        className='form-input px-4 py-2 border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 rounded-md shadow-sm w-full'
-        type="text"
-        value={input}
-        onChange={handleChange}
-        placeholder="Type your message here..."
-      />
-      <button
-        onClick={handleClick}
-        className="my-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Send
-      </button>
-      {output.map((item, index) => (
-        <Chatbox key={index} sender={item.sender} message={item.message} />
-      ))}
+    <div className="chat-container">
+      <div className="chat-sidebar">
+        {/* You can add buttons or links here to simulate different chat rooms or functionalities */}
+      </div>
+      <div className="chat-main">
+        <div className="message-area">
+          {output.map((item, index) => (
+            <Chatbox key={index} sender={item.sender} message={item.message} />
+          ))}
+          <div ref={endOfMessagesRef} /> {/* Empty div for scrolling to bottom */}
+        </div>
+        <form className="message-form">
+          <input
+            type="text"
+            value={input}
+            onChange={handleChange}
+            className="message-input"
+            placeholder="Type your message here..."
+          />
+          <button type="button" onClick={handleClick} className="send-button">Send</button>
+        </form>
+      </div>
     </div>
   );
+
 }
 
 export default Chatbot;

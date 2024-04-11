@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import McqBtn from './McqBtn';
+import McqBtn from '../components/McqBtn';
 interface FetchedQuestion {
     topic: string[];
 }
