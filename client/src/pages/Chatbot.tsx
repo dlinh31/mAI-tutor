@@ -5,7 +5,7 @@ interface OutputObject {
   message: string;
   sender: string;
 }
-
+const ENDPOINT = "http://localhost:3000/api/";
 interface UserObject {
   name: string;
   email: string;
@@ -29,7 +29,7 @@ function saveChat(chatId: string, sender: string, message: string) {
     ]
   };
 
-  fetch(`http://localhost:3000/api/chat`, {
+  fetch(`${ENDPOINT}chat`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ function Chatbot() {
 
   const fetchChatRooms = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/chat/sessions/${userId}`, {
+      const response = await fetch(`${ENDPOINT}chat/sessions/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ function Chatbot() {
     };
   
     try {
-      const response = await fetch('http://localhost:3000/api/chat/newchat/', {
+      const response = await fetch(`${ENDPOINT}api/chat/newchat/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function Chatbot() {
   const fetchChatHistory = async (chatId: string) => {
     if (!chatId) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/chat/${chatId}`, {
+      const response = await fetch(`${ENDPOINT}chat/${chatId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ function Chatbot() {
     setInput("");
 
     try {
-      const response = await fetch('http://localhost:3000/api/chat/aichat', {
+      const response = await fetch(`${ENDPOINT}chat/aichat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
