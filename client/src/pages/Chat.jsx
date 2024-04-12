@@ -5,6 +5,7 @@ import { useUser } from '../context/userContext';
 import socketIOClient from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import ChatboxUser from '../components/ChatboxUser';
+import ImageUploader from '../components/ImageUploader';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -73,6 +74,20 @@ function ChatPage() {
       setIsLoading(false);
     }
   };
+
+  const handleImageUpload = (imageUrl) => {
+    const messageData = {
+      content: imageUrl,
+      senderId: user.id,
+      chatId: currentChat.id,
+      type: 'image'  // Distinguish between text and image messages
+    };
+    if (socket.current) {
+      socket.current.emit('newChatMessage', messageData);
+    }
+  };
+
+
 
   // Function to handle chat selection
   const handleChatSelection = async (chatRoom) => {
@@ -146,18 +161,22 @@ function ChatPage() {
         {/* This empty div will be used to scroll to the latest message */}
         <div ref={messagesEndRef} />
       </div>
+
+
       
-      {currentChat.id && (
-        <form className="message-form" onSubmit={sendMessage}>
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="message-input"
-          />
-          <button type="submit" className="send-button">Send</button>
-        </form>
+      {currentChat.id && ( 
+      <>
+      <ImageUploader onImageUpload={handleImageUpload} />
+      <form className="message-form" onSubmit={sendMessage}>
+            <input
+              type="text"
+              placeholder="Type a message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="message-input" />
+            <button type="submit" className="send-button">Send</button>
+          </form>
+          </>
       )}
     </div>
   </div>
