@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App bg-gradient-to-r from-blue-300 via-blue-200 to-purple-200">
       <HeroSection />
       <FeaturesSection />
       <AIChatbotSection />

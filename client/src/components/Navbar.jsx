@@ -22,9 +22,12 @@ const Navbar = () => {
                         <Link to="/aitutor" className="text-lg text-gray-600 hover:text-blue-600 transition duration-300">AI Tutor</Link>
                         <Link to="/chat" className="text-lg text-gray-600 hover:text-blue-600 transition duration-300">Chat</Link>
                         {user ? (
-                            <button onClick={logout} className="py-2 px-6 text-white bg-red-500 rounded hover:bg-red-600 transition duration-300">
-                                Log Out
-                            </button>
+                            <div className="flex items-center space-x-4">
+                                <span className="text-sm text-gray-800">Welcome, {user.name}</span>
+                                <button onClick={logout} className="py-2 px-6 text-white bg-red-500 rounded hover:bg-red-600 transition duration-300">
+                                    Log Out
+                                </button>
+                            </div>
                         ) : (
                             <Link to="/login" className="py-2 px-6 text-white bg-green-500 rounded hover:bg-green-600 transition duration-300">Sign In</Link>
                         )}
