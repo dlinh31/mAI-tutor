@@ -48,7 +48,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-300 via-blue-200 to-purple-200">
       <div className="max-w-md w-full space-y-8 p-10 bg-white shadow-lg rounded-lg">
          {error && (
           <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

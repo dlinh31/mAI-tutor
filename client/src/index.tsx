@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import ChatPage from './pages/Chat';
 import { UserContextProvider } from './context/userContext';
 import { useUser } from './context/userContext';
+import AiTutor from './pages/AiTutor';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -34,8 +35,9 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route element={<RequireAuth />}> {/* Wrap protected routes */}
+            <Route path="/aitutor/chatbot/" element={<Chatbot />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/aitutor" element={<Chatbot />} />
+            <Route path="/aitutor" element={<AiTutor />} />
             <Route path="/aitutor/quiz" element={<QuizGenerator />} />
           </Route>
         </Routes>

@@ -115,7 +115,7 @@ function ChatPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-  <div className="chat-container">
+  <div className="chat-container bg-gradient-to-r from-blue-300 via-blue-200 to-purple-200">
     <div className="chat-sidebar">
       <div className="sidebar-header">Rooms</div>
       <CreateChatRoom socket={socket.current} />
@@ -138,7 +138,7 @@ function ChatPage() {
         {messages.map((msg, index) => (
           <ChatboxUser 
             key={index} 
-            sender={msg.senderId._id === user.id ? 'user' : 'other'}
+            sender={msg.senderId._id === user.id || msg.senderId === user.id ? 'user' : 'other'}
             senderName={msg.senderName || msg.senderId.name} 
             content={msg.content}
           />
