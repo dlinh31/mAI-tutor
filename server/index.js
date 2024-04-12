@@ -16,6 +16,7 @@ const User = require('./models/userModel'); // User model
 const userRoutes = require('./routes/userRoutes');
 const messageChatRoutes = require('./routes/messageChatRoutes');
 const chatbotRoutes = require('./routes/chatbotRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 
 // Controllers
 const { createMessage, createChat } = require('./controllers/messageChatController');
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 // Routes setup
 app.use('/api/user', userRoutes);
 app.use('/api', messageChatRoutes);
+app.use('/api/images', imageRoutes)
 app.use('/api/chat', chatbotRoutes);
 
 // MongoDB connection

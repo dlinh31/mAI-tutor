@@ -1,7 +1,7 @@
 const OpenAI = require('openai');
 const fs = require('fs');
 const path = require('path');
-const dotenvPath = path.resolve(__dirname, '../../.env');
+const dotenvPath = path.resolve(__dirname, '../.env');
 
 require('dotenv').config({path: dotenvPath});
 const api_key = process.env.OPENAI_API_KEY
@@ -9,6 +9,8 @@ const openai = new OpenAI({
     apiKey: api_key,
     dangerouslyAllowBrowser: true
 })
+
+
 
 const general_chatbot = async (req, res) => {
     const { user_message, chat_history } = req.body;
