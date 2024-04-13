@@ -72,9 +72,12 @@ function Chatbot() {
       });
       const rooms: ChatRoom[] = await response.json();
       setChatRooms(rooms);
-      console.log("rooms: ", rooms);
+
       if (rooms.length > 0) {
         setCurrentChat(rooms[0]); // Automatically select the first room
+      }
+      else{
+        setCurrentChat(null);
       }
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
@@ -90,7 +93,7 @@ function Chatbot() {
     };
   
     try {
-      const response = await fetch(`${ENDPOINT}api/chat/newchat/`, {
+      const response = await fetch(`${ENDPOINT}chat/newchat/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
