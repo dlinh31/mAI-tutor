@@ -174,7 +174,7 @@ function Chatbot() {
   };
 
   return (
-    <div className="chat-container">
+    <div className="chat-container bg-gradient-to-r from-blue-300 via-blue-200 to-purple-200">
       <div className="chat-sidebar">
         <ul>
           {chatRooms.map((chatRoom) => (
