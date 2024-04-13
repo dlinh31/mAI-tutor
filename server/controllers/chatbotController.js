@@ -8,7 +8,7 @@ const addChatSession = async(req, res) => {
         console.log(userId);
         user = await User.findById(req.body.userId);
         console.log("User: ", user)
-        const chatSession = await ChatSession.create({ user: user, messages: [] });
+        const chatSession = await ChatSession.create({ user: user, chatName: req.body.chatName, messages: [] });
         console.log("Created chat session");
         res.status(200).send(chatSession);
     } catch (error) {
@@ -17,9 +17,9 @@ const addChatSession = async(req, res) => {
 };
 
 const getMessage = async(req, res) => {
+    console.log("Into getmessage")
     try {
-        const user = await User.findById(req.params.userId);
-        const chatSession = await ChatSession.findOne({ user: user });
+        const chatSession = await ChatSession.findById(req.params.chatId);
         res.status(200).send(chatSession.messages);
     } catch (error) {
         res.status(500).send(error);
@@ -28,9 +28,8 @@ const getMessage = async(req, res) => {
 
 const addMessage = async(req, res) => {
     try {
-        const user = await User.findById(req.body.userId);
-        console.log(user)
-        const chatSession = await ChatSession.findOne({ user: user });
+
+        const chatSession = await ChatSession.findById(req.body.chatId);
         const newMessage = {
             text: req.body.message[0].text,
             sender: req.body.message[0].sender
@@ -56,9 +55,28 @@ const deleteMessages = async(req, res) => {
     }
 };
 
+const fetchChatSessions = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId);
+        const chatSessions = await ChatSession.find({ user: user });
+        const modifiedChatSessions = chatSessions.map(session => {
+            return {
+            _id: session._id,
+            chatName: session.chatName
+            };
+        });
+        res.status(200).send(modifiedChatSessions);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
+
 module.exports = {
     addChatSession,
     getMessage,
     addMessage,
-    deleteMessages
+    deleteMessages,
+    fetchChatSessions,
 };

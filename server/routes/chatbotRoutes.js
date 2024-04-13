@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { general_chatbot, quiz_generate, } = require('../controllers/gptController');
-const { addChatSession, getMessage, addMessage, deleteMessages } = require('../controllers/chatbotController');
+const { addChatSession, getMessage, addMessage, deleteMessages, fetchChatSessions } = require('../controllers/chatbotController');
 
 
 
@@ -15,8 +15,9 @@ router.post('/quiz', quiz_generate);
 // default: "/api/chat"
 router.post('/newchat', addChatSession);
 router.patch('/', addMessage);
-router.get('/:userId', getMessage);
+router.get('/:chatId', getMessage); // get messages from chatid
 router.delete('/', deleteMessages);
+router.get('/sessions/:userId', fetchChatSessions);
 
 
 module.exports = router;
