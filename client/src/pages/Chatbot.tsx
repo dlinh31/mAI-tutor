@@ -73,12 +73,7 @@ function Chatbot() {
       const rooms: ChatRoom[] = await response.json();
       setChatRooms(rooms);
 
-      if (rooms.length > 0) {
-        setCurrentChat(rooms[0]); // Automatically select the first room
-      }
-      else{
-        setCurrentChat(null);
-      }
+
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
     }

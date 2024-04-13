@@ -4,41 +4,29 @@ interface McqBtnProps {
     answer: string;
     isTrue: boolean;
 }
-
-
-
-
-
 const McqBtn: React.FC<McqBtnProps> = ({ answer, isTrue }) => {
-    const [answerDisplay, setAnswerDisplay] = useState("");
+    const [answerDisplay, setAnswerDisplay] = useState(answer);
+    const [color, setColor] = useState("blue-600");
+  
     useEffect(() => {
-        // Code to be executed when the 'answer' prop changes
-        setAnswerDisplay(answer);
-        setColor("blue")
+      setAnswerDisplay(answer);
+      setColor("blue-600");
     }, [answer]);
-
+  
     function handleClick(isTrue: boolean) {
-        if (isTrue){
-            setColor("green");
-        }
-        else{
-            setColor("red")
-        }
-
+      setColor(isTrue ? "green-500" : "red-500");
     }
-
-    
-    const [color, setColor] = useState("blue");
+  
     return (
-        <button
-        className={`font-bold py-2 my-3 mx-8 rounded-lg text-white
-        ${color === "green" ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-500 hover:bg-blue-700'}
-        ${color === "red" ? 'bg-red-500 hover:bg-red-600' : ''} `}
-            onClick={() => handleClick(isTrue)}
-        >
-            {answerDisplay}
-        </button>
+      <button
+        className={`font-bold py-2 px-4 my-2 w-full rounded-lg text-white transition duration-300 ease-in-out
+        ${color === "green-500" ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}
+        ${color === "red-500" ? 'bg-red-500 hover:bg-red-600' : ''}`}
+        onClick={() => handleClick(isTrue)}
+      >
+        {answerDisplay}
+      </button>
     );
-};
-
-export default McqBtn;
+  };
+  
+  export default McqBtn;

@@ -56,42 +56,42 @@ function QuizGenerator(){
 
 
     return (
-        <div className="my-4 ml-2">
-            <h1 className="text-2xl font-bold mb-4">This is QuizGenerator</h1>
-            <input 
+        <div className='min-h-screen w-full bg-gradient-to-r from-blue-300 via-blue-200 to-purple-200 flex justify-center items-center p-4'>
+          <div className="bg-white max-w-3xl w-full shadow-xl rounded-lg p-6">
+            <h1 className="text-3xl font-bold mb-6 text-center">Quiz Time!</h1>
+            <div className="flex justify-center items-center mb-4">
+              <input 
                 type="text" 
                 value={input} 
                 onChange={(e) => setInput(e.target.value)} 
-                className="border border-gray-300 rounded-md px-4 py-2 mb-4"
-            />
-            <button 
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold ml-2 py-2 px-4 rounded"
+                placeholder="Enter topic..."
+                className="border border-gray-300 rounded-md px-4 py-2 mr-4 flex-grow"
+              />
+              <button 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow"
                 onClick={handleSubmit}
-            >
-                Send
-            </button>
-            
-
+              >
+                Start
+              </button>
+            </div>
+    
             {questions.length > 0 && (
-                
-
-                <div className="flex flex-col">
-                    <div className="bg-blue-100 my-3 mx-8 p-4 rounded-md mb-4 text-center">
-                        {questions[0].question}
-                    </div>
-
-                    {questions[0].answers.map((question, index) => (
-                        <McqBtn 
-                            key={index}
-                            answer={question}
-                            isTrue={index === 0} 
-                        />
-                    ))}
+              <div className="flex flex-col items-center">
+                <div className="bg-blue-100 my-3 p-4 rounded-md w-full text-center">
+                  <h2 className="font-semibold text-lg">{questions[0].question}</h2>
                 </div>
+                {questions[0].answers.map((question, index) => (
+                  <McqBtn 
+                    key={index}
+                    answer={question}
+                    isTrue={index === 0} 
+                  />
+                ))}
+              </div>
             )}
+          </div>
         </div>
-    )
-
+      );
 
 }
 
