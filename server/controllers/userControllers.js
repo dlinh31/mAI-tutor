@@ -43,7 +43,7 @@ const signupUser = async(req, res) => {
         const user = await User.create({ name, email, password: hashedPass });
         const token = generateToken(user._id);
         console.log(token);
-        res.status(201).json({ name: user.name, email: user.email, token });
+        res.status(201).json({ name: user.name, email: user.email, token, id:user._id });
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err.message });
