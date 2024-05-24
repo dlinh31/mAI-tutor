@@ -168,6 +168,7 @@ function ChatPage() {
       {currentChat.id && ( 
       <>
             <form className="message-form" onSubmit={sendMessage}>
+              <ImageUploader onImageUpload={handleImageUpload}/>
             <input
               type="text"
               placeholder="Type a message..."

@@ -13,6 +13,7 @@ interface UserObject {
   id: string;
 }
 
+
 interface ChatRoom {
   _id: string;
   chatName: string;
@@ -53,7 +54,10 @@ function Chatbot() {
   const [output, setOutput] = useState<OutputObject[]>([]);
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [currentChat, setCurrentChat] = useState<ChatRoom | null>(null);
+
   const user: UserObject | null = JSON.parse(localStorage.getItem("user") || "null");
+
+
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -70,17 +74,22 @@ function Chatbot() {
           'Content-Type': 'application/json',
         }
       });
-      const rooms: ChatRoom[] = await response.json();
-      setChatRooms(rooms);
-      console.log("rooms: ", rooms);
-      if (rooms.length > 0) {
-        setCurrentChat(rooms[0]); // Automatically select the first room
+      let rooms = await response.json();
+      // Ensure rooms is always an array
+      if (!Array.isArray(rooms)) {
+        rooms = [];
       }
+      setChatRooms(rooms);
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
+      setChatRooms([]);  // Ensure state is still an array on error
     }
   };
+
+
+
   const createNewChatSession = async () => {
+
     if (!user) return;  // Ensuring there is a user logged in
   
     const newChatName = `Chat ${chatRooms.length + 1}`;  // Example of naming a new chat dynamically
@@ -90,7 +99,7 @@ function Chatbot() {
     };
   
     try {
-      const response = await fetch(`${ENDPOINT}api/chat/newchat/`, {
+      const response = await fetch(`${ENDPOINT}chat/newchat/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,12 +152,14 @@ function Chatbot() {
   }, [output]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     setInput(event.target.value);
   };
-
+  
   const handleClick = async () => {
+  
     if (!currentChat) return;
-
+  
     setOutput(prevOutput => [...prevOutput, { message: input, sender: 'user' }]);
     saveChat(currentChat._id, 'user', input);
     setInput("");
@@ -168,6 +179,10 @@ function Chatbot() {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleClick();  // Assuming handleClick sends the message
   };
 
   return (
@@ -196,7 +211,7 @@ function Chatbot() {
             ))}
             <div ref={endOfMessagesRef} />
           </div>
-          <form className="message-form">
+          <form className="message-form" onSubmit={handleSubmit}>
             <input
               type="text"
               value={input}
@@ -204,7 +219,7 @@ function Chatbot() {
               className="message-input"
               placeholder="Type your message here..."
             />
-            <button type="button" onClick={handleClick} className="send-button">Send</button>
+            <button type="submit" className="send-button">Send</button>
           </form>
         </div>
       )}
